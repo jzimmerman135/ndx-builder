@@ -1,0 +1,90 @@
+* {
+  margin: 0;
+  padding: 0;
+  color: #4e4e4e;
+}
+
+:root {
+  --ndx-grey: #eaeaea;
+  --ndx-text-dark: #4e4e4e;
+  --ndx-bg-light: #fbfbfb;
+  --ndx-bg-lightblue: rgb(234, 248, 254);
+}
+
+html,
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid red;
+}
+
+.ndx-titlebar {
+  padding: 20px;
+  background: var(--ndx-bg-lightblue);
+}
+
+.ndx-contextbar {
+  display: flex;
+  flex-direction: row;
+}
+
+.ndx-contextbar > * {
+  margin: auto 0;
+}
+
+#contextbar-back,
+#contextbar-next {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+  vertical-align: center;
+  width: 40px;
+}
+
+#contextbar-back.hidden,
+#contextbar-next.hidden {
+  border: 2px solid blue
+}
+
+#contextbar-next {
+  margin-left: auto;
+}
+
+#contextbar-title {
+  font-size: 30px;
+  padding: 20px;
+}
+
+#ndx-main {
+  margin-bottom: auto;
+  border: 2px solid greenyellow;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+}
+
+.ndx-interface {
+  height: 100%;
+  width: 100%;
+  border: 2px solid plum;
+  flex-shrink: 0;
+  overflow: scroll;
+  background-size: 40px 40px;
+  transition: 0.2s;
+}
+
+#ndx-visualization {
+  background-size: 80px 80px;
+  background-image: linear-gradient(
+      to right,
+      rgb(200, 200, 200) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgb(210, 210, 210) 1px, transparent 1px);
+}
+
+#ndx-basespec-picker {
+  background-color: #4e4e4e;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NWB Extension Builder</title>
+    <link rel="stylesheet" href="src/styles/theme.css" />
+  </head>
+  <body>
+    <div class="ndx-titlebar">
+      NWB Extension Builder
+      <span class="ndx-titlebarsubtext">v0.0.1</span>
+    </div>
+    <div class="ndx-contextbar">
+      <!-- back arrow -->
+      <svg
+        id="contextbar-back"
+        xmlns="http://www.w3.org/2000/svg"
+        height="48"
+        viewBox="0 -960 960 960"
+        width="48"
+      >
+        <path
+          d="M480-160 160-480l320-320 42 42-248 248h526v60H274l248 248-42 42Z"
+        />
+      </svg>
+      <div id="contextbar-title">Probably namespace title</div>
+      <div id="contextbar-subtitle">Probably some author names</div>
+      <!-- next arrow -->
+      <svg
+        id="contextbar-next"
+        xmlns="http://www.w3.org/2000/svg"
+        height="48"
+        viewBox="0 -960 960 960"
+        width="48"
+      >
+        <path
+          d="m480-160-42-43 247-247H160v-60h525L438-757l42-43 320 320-320 320Z"
+        />
+      </svg>
+    </div>
+    <div id="ndx-main">
+      <div class="ndx-interface" id="ndx-namespace-builder">
+        Name your new extension
+      </div>
+      <div class="ndx-interface" id="ndx-basespec-picker">
+        Pick what you want to extend
+      </div>
+      <div class="ndx-interface" id="ndx-visualization">
+        view your complete extension
+      </div>
+    </div>
+  </body>
+  <script type="module" src="/src/main.ts"></script>
+</html>
