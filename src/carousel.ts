@@ -10,59 +10,37 @@ type Carousel = {
   backEnabled: boolean,
 }
 
-export function enableNextButton(carousel: Carousel) {
-  const button = carousel.nextButton;
-  button.classList.remove('hidden');
-  button.classList.remove('disabled');
-  carousel.nextEnabled = true;
-}
-
-export function enableBackButton(carousel: Carousel) {
-  const button = carousel.backButton;
-  button.classList.remove('hidden');
-  button.classList.remove('disabled');
-  carousel.backEnabled = true;
-}
-
-export function disableNextButton(carousel: Carousel) {
-  const button = carousel.nextButton;
-  button.classList.add('disabled');
-  carousel.nextEnabled = false;
-}
-
-export function disableBackButton(carousel: Carousel) {
-  const button = carousel.backButton;
-  button.classList.add('disabled');
-  carousel.backEnabled = false;
-}
-
-// hiding buttons is handled internally 
-function hideNextButton(carousel: Carousel) {
-  const button = carousel.nextButton;
-  button.classList.add('hidden');
-  carousel.nextEnabled = false;
-}
-
-function hideBackButton(carousel: Carousel) {
-  const button = carousel.backButton;
-  button.classList.add('hidden');
-  carousel.backEnabled = false;
-}
-
 function invalidCarousel(carousel: Carousel) {
   return carousel.at < 0 || carousel.at >= carousel.length;
 }
 
 // forward or backward
-function slideCarousel(carousel: Carousel, forward: boolean) {
+function slideCarousel(
+  carousel: Carousel,
+  forward: boolean,
+  enableButton: (button: HTMLElement) => void,
+  hideButton: (button: HTMLElement) => void
+) {
   if (invalidCarousel(carousel))
     throw Error("Bad carousel: " + String(carousel));
 
   const start = forward ? 0 : carousel.length - 1;
   const end = !forward ? 0 : carousel.length - 1;
-  const enableBack = forward ? enableBackButton : enableNextButton;
-  const hideNext = forward ? hideNextButton : hideBackButton;
   const nextAt = forward ? carousel.at + 1 : carousel.at - 1;
+  const enableBack = (c: Carousel) => {
+    enableButton(forward ? c.backButton : c.nextButton);
+    if (forward)
+      carousel.backEnabled = true;
+    else
+      carousel.nextEnabled = true;
+  }
+  const hideNext = (c: Carousel) => {
+    hideButton(forward ? c.nextButton : c.backButton);
+    if (forward)
+      carousel.nextEnabled = false;
+    else
+      carousel.backEnabled = false;
+  }
 
   if (carousel.at == end)
     return;
@@ -76,15 +54,18 @@ function slideCarousel(carousel: Carousel, forward: boolean) {
   carousel.slidingElements.map((e) => e.style.transform = translatex);
 }
 
-export function buildCarousel(
-  slidingElements: HTMLCollectionOf<HTMLElement>,
+export default function Carousel(
+  slidingElements: HTMLCollectionOf<Element>,
   nextButton: HTMLElement,
-  backButton: HTMLElement
+  backButton: HTMLElement,
+  enableButton: (elem: HTMLElement) => void,
+  disableButton: (elem: HTMLElement) => void,
+  hideButton: (elem: HTMLElement) => void,
 ) {
   const carousel: Carousel = {
     at: 0,
     length: slidingElements.length,
-    slidingElements: Array.from(slidingElements),
+    slidingElements: Array.from(slidingElements) as HTMLElement[],
     nextButton,
     backButton,
     nextEnabled: true,
@@ -94,29 +75,34 @@ export function buildCarousel(
   carousel.nextButton.addEventListener('click', () => {
     if (!carousel.nextEnabled)
       return;
-    slideCarousel(carousel, true);
-    console.log('next');
+    slideCarousel(carousel, true, enableButton, hideButton);
   })
 
   carousel.backButton.addEventListener('click', () => {
     if (!carousel.backEnabled)
       return;
-    slideCarousel(carousel, false);
-    console.log('back');
+    slideCarousel(carousel, false, enableButton, hideButton);
   })
+
+  hideButton(carousel.backButton);
+  enableButton(carousel.nextButton);
 
   return {
     enableNextButton() {
-      enableNextButton(carousel)
+      enableButton(carousel.nextButton);
+      carousel.nextEnabled = true;
     },
     enableBackButton() {
-      enableBackButton(carousel)
+      enableButton(carousel.backButton);
+      carousel.backEnabled = true;
     },
     disableNextButton() {
-      disableNextButton(carousel)
+      disableButton(carousel.nextButton);
+      carousel.nextEnabled = false;
     },
     disableBackButton() {
-      disableBackButton(carousel)
+      disableButton(carousel.backButton);
+      carousel.backEnabled = false;
     }
   };
 }
