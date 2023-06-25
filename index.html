@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NWB Extension Builder</title>
     <link rel="stylesheet" href="src/styles/theme.css" />
+    <link rel="stylesheet" href="src/styles/namespace.css" />
   </head>
   <body>
     <div class="ndx-titlebar">
@@ -41,9 +42,38 @@
         />
       </svg>
     </div>
-    <div id="ndx-main">
+    <form id="ndx-main" name="ndx-builder">
       <div class="ndx-interface" id="ndx-namespace-builder">
-        Name your new extension
+        <h1>Name your new extension
+          <input name="namespace-name" type="text" required>
+        </h1>
+        <div>Version
+          <input name="namespace-version" type="text" placeholder="0.1.0">
+        </div>
+        <div id="namespace-authors">
+          Authors:
+          <div class="namespace-save-row">
+            <div class="namespace-author-col">
+              <div>Name</div>
+              <input name="author-name">
+            </div>
+            <div class="namespace-author-col">
+              <div>Contact</div>
+              <input name="author-email">
+            </div>
+            <div class="namespace-author-col">
+                 <svg class="author-close" xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48"><path d="m249-207-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"/></svg>
+                 <svg class="author-close" xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48"><path d="m249-207-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"/></svg>
+                 <svg class="author-close" xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48"><path d="m249-207-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"/></svg>
+            </div>
+          </div>
+          <div class="namespace-save-row">
+            <div id="namespace-add-author" class="ndx-lightbutton">Add author</div>
+          </div>
+        </div>
+        <div class="namespace-save-row">
+          <div id="namespace-save" class="ndx-lightbutton">Save</div>
+        </div>
       </div>
       <div class="ndx-interface" id="ndx-basespec-picker">
         Pick what you want to extend
@@ -51,7 +81,7 @@
       <div class="ndx-interface" id="ndx-visualization">
         view your complete extension
       </div>
-    </div>
+    </form>
   </body>
   <script type="module" src="/src/main.ts"></script>
 </html>

@@ -1,4 +1,5 @@
 import Carousel from "./carousel";
+import setupNamespace from "./namespace-builder";
 
 const carousel = Carousel(
   document.getElementsByClassName('ndx-interface'),
@@ -8,10 +9,8 @@ const carousel = Carousel(
     button.classList.remove('hidden');
     button.classList.remove('disabled');
   },
-  (button: HTMLElement) => {
-    button.classList.add('disabled');
-  },
-  (button: HTMLElement) => {
-    button.classList.add('hidden');
-  },
+  (button: HTMLElement) => button.classList.add('disabled'),
+  (button: HTMLElement) => button.classList.add('hidden'),
 );
+
+const namespace = setupNamespace();

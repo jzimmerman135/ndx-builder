@@ -89,3 +89,8 @@ body {
 #ndx-basespec-picker {
   background-color: #4e4e4e;
 }
+
+.ndx-lightbutton {
+  border: 2px solid blue;
+  padding: 6px;
+}

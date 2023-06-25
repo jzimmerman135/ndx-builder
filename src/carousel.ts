@@ -1,25 +1,26 @@
 // Carousel manager
 
+// internal implementation structure
 type Carousel = {
   at: number;
+  nextEnabled: boolean,
+  backEnabled: boolean,
   readonly length: number;
   readonly slidingElements: Array<HTMLElement>;
   readonly nextButton: HTMLElement,
   readonly backButton: HTMLElement,
-  nextEnabled: boolean,
-  backEnabled: boolean,
 }
 
 function invalidCarousel(carousel: Carousel) {
   return carousel.at < 0 || carousel.at >= carousel.length;
 }
 
-// forward or backward
+// or backward
 function slideCarousel(
   carousel: Carousel,
   forward: boolean,
   enableButton: (button: HTMLElement) => void,
-  hideButton: (button: HTMLElement) => void
+  hideButton: (button: HTMLElement) => void,
 ) {
   if (invalidCarousel(carousel))
     throw Error("Bad carousel: " + String(carousel));
@@ -27,6 +28,7 @@ function slideCarousel(
   const start = forward ? 0 : carousel.length - 1;
   const end = !forward ? 0 : carousel.length - 1;
   const nextAt = forward ? carousel.at + 1 : carousel.at - 1;
+
   const enableBack = (c: Carousel) => {
     enableButton(forward ? c.backButton : c.nextButton);
     if (forward)
@@ -34,6 +36,7 @@ function slideCarousel(
     else
       carousel.nextEnabled = true;
   }
+
   const hideNext = (c: Carousel) => {
     hideButton(forward ? c.nextButton : c.backButton);
     if (forward)
@@ -54,55 +57,68 @@ function slideCarousel(
   carousel.slidingElements.map((e) => e.style.transform = translatex);
 }
 
+// returns an interface to use the carousel
+//
+// the enable, disable and hide callbacks are only for visual changes
+// event handler logic is internal
 export default function Carousel(
   slidingElements: HTMLCollectionOf<Element>,
   nextButton: HTMLElement,
   backButton: HTMLElement,
-  enableButton: (elem: HTMLElement) => void,
-  disableButton: (elem: HTMLElement) => void,
-  hideButton: (elem: HTMLElement) => void,
+  enableButtonEffect: (elem: HTMLElement) => void,
+  disableButtonEffect: (elem: HTMLElement) => void,
+  hideButtonEffect: (elem: HTMLElement) => void,
 ) {
   const carousel: Carousel = {
     at: 0,
+    nextEnabled: true,
+    backEnabled: false,
     length: slidingElements.length,
     slidingElements: Array.from(slidingElements) as HTMLElement[],
     nextButton,
     backButton,
-    nextEnabled: true,
-    backEnabled: false,
   };
 
-  carousel.nextButton.addEventListener('click', () => {
-    if (!carousel.nextEnabled)
-      return;
-    slideCarousel(carousel, true, enableButton, hideButton);
-  })
+  hideButtonEffect(carousel.backButton);
+  enableButtonEffect(carousel.nextButton);
 
-  carousel.backButton.addEventListener('click', () => {
-    if (!carousel.backEnabled)
+  const slide = (c: Carousel, enabled: boolean, forward: boolean) => {
+    if (!enabled)
       return;
-    slideCarousel(carousel, false, enableButton, hideButton);
-  })
-
-  hideButton(carousel.backButton);
-  enableButton(carousel.nextButton);
+    slideCarousel(c, forward, enableButtonEffect, hideButtonEffect);
+  }
+  carousel.nextButton.addEventListener('click',
+    () => slide(carousel, carousel.nextEnabled, true));
+  carousel.backButton.addEventListener('click',
+    () => slide(carousel, carousel.backEnabled, false));
 
   return {
     enableNextButton() {
-      enableButton(carousel.nextButton);
+      enableButtonEffect(carousel.nextButton);
       carousel.nextEnabled = true;
     },
     enableBackButton() {
-      enableButton(carousel.backButton);
+      enableButtonEffect(carousel.backButton);
       carousel.backEnabled = true;
     },
     disableNextButton() {
-      disableButton(carousel.nextButton);
+      disableButtonEffect(carousel.nextButton);
       carousel.nextEnabled = false;
     },
     disableBackButton() {
-      disableButton(carousel.backButton);
+      disableButtonEffect(carousel.backButton);
       carousel.backEnabled = false;
+    },
+    trySlideNext() {
+      slide(carousel, carousel.nextEnabled, true);
+      return carousel.nextEnabled;
+    },
+    trySlideBack() {
+      slide(carousel, carousel.backEnabled, false);
+      return carousel.backEnabled;
+    },
+    at() {
+      return carousel.at;
     }
   };
 }

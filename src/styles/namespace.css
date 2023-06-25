@@ -1,0 +1,19 @@
+#namespace-authors {
+  display: flex;
+  flex-direction: column;
+}
+
+.namespace-author-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.namespace-save-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.author-close {
+  height: 20px;
+  width: 20px;
+}
